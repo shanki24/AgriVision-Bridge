@@ -1,0 +1,11 @@
+ultralytics>=8.0.0
+torch
+torchvision
+torchaudio
+opencv-python
+numpy
+Pillow
+tqdm
+streamlit
+numpy
+matplotlib

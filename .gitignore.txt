@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/
+
+# YOLO / Training artifacts
+runs/
+data/raw/
+data/processed/
+
+# Large files
+*.pt
+*.pth
+*.onnx
+
+# Logs
+*.log
