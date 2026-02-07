@@ -24,7 +24,15 @@ from src.reasoning.llm_engine import run_local_llm
 
 
 # CONFIG
-MODEL_PATH = r"C:\Users\Sujal\OneDrive\Desktop\AgriVision-Bridge\runs\classify\train4\weights\best.pt"
+MODEL_PATH = os.path.join(
+    PROJECT_ROOT,
+    "runs",
+    "classify",
+    "train",
+    "weights",
+    "best.pt"
+)
+
 LLM_MODEL = "llama3"
 
 model = YOLO(MODEL_PATH)
