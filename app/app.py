@@ -111,7 +111,7 @@ def overlay_boxes(image_pil, label, confidence):
 # --------------------------------------------------
 st.set_page_config(page_title="AgriVision-Bridge", layout="centered")
 
-st.title("🌱 AgriVision-Bridge")
+st.title("AgriVision-Bridge")
 st.subheader("AI-Powered Crop Disease Diagnosis")
 
 st.write(
@@ -145,7 +145,7 @@ if uploaded_file:
         st.success("Disease detection completed")
 
         # ---------------- Vision Output ----------------
-        st.markdown("### 🧪 Vision Layer Output")
+        st.markdown("### Vision Layer Output")
         st.write(f"**Detected Disease:** {disease_label}")
         st.write(f"**Confidence Score:** {confidence:.2f}")
 
@@ -157,7 +157,7 @@ if uploaded_file:
         )
 
         # ---------------- Diagnosis (Cloud-safe) ----------------
-        st.markdown("### 🧠 Final Diagnosis & Action Plan")
+        st.markdown("### Final Diagnosis & Action Plan")
 
         prompt = build_prompt({
             "disease_label": disease_label,
@@ -172,7 +172,7 @@ if uploaded_file:
         st.write(prompt)
 
         # ---------------- Evaluation Metrics ----------------
-        st.markdown("### 📊 Evaluation Metrics")
+        st.markdown("### Evaluation Metrics")
 
         col1, col2 = st.columns(2)
         with col1:
