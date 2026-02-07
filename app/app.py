@@ -3,7 +3,6 @@ import os
 import time
 import torch
 
-
 # Fix Python path to allow src imports
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(PROJECT_ROOT)
@@ -11,38 +10,29 @@ sys.path.append(PROJECT_ROOT)
 import streamlit as st
 from PIL import Image
 import tempfile
-import cv2
 import numpy as np
+import cv2
 
 # Vision layer
 from ultralytics import YOLO
 
-# Reasoning layer
+# Reasoning prompt (SAFE to import)
 from src.reasoning.prompt_builder import build_prompt
-from src.reasoning.llm_engine import run_local_llm
 
-
-
-# CONFIG
-MODEL_PATH = os.path.join(
-    PROJECT_ROOT,
-    "runs",
-    "classify",
-    "train",
-    "weights",
-    "best.pt"
-)
-
+# --------------------------------------------------
+# CONFIG (GitHub-safe paths)
+# --------------------------------------------------
+MODEL_PATH = "runs/classify/train/weights/best.pt"
 LLM_MODEL = "llama3"
 
+# Load model
 model = YOLO(MODEL_PATH)
 
-
-
+# --------------------------------------------------
 # OVERLAY LOGIC
 # Healthy  -> single GREEN box
-# Disease  -> ONLY multiple BLUE boxes
-
+# Disease  -> multiple RED boxes
+# --------------------------------------------------
 def overlay_boxes(image_pil, label, confidence):
     image = np.array(image_pil)
     output = image.copy()
@@ -68,7 +58,7 @@ def overlay_boxes(image_pil, label, confidence):
         )
         return output
 
-    # DISEASED
+    # DISEASED — lesion segmentation
     lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
     _, a, _ = cv2.split(lab)
     _, thresh = cv2.threshold(a, 135, 255, cv2.THRESH_BINARY_INV)
@@ -116,17 +106,17 @@ def overlay_boxes(image_pil, label, confidence):
 
     return output
 
-
-
+# --------------------------------------------------
 # STREAMLIT UI
+# --------------------------------------------------
 st.set_page_config(page_title="AgriVision-Bridge", layout="centered")
 
-st.title("AgriVision-Bridge")
+st.title("🌱 AgriVision-Bridge")
 st.subheader("AI-Powered Crop Disease Diagnosis")
 
 st.write(
     "Upload a crop leaf image to detect diseases, visualize affected regions, "
-    "and receive an AI-generated diagnosis with action plan."
+    "and receive an AI-generated diagnostic summary."
 )
 
 uploaded_file = st.file_uploader(
@@ -154,9 +144,8 @@ if uploaded_file:
 
         st.success("Disease detection completed")
 
-        
-        # Vision Output
-        st.markdown("### Vision Layer Output")
+        # ---------------- Vision Output ----------------
+        st.markdown("### 🧪 Vision Layer Output")
         st.write(f"**Detected Disease:** {disease_label}")
         st.write(f"**Confidence Score:** {confidence:.2f}")
 
@@ -167,22 +156,23 @@ if uploaded_file:
             width=700
         )
 
-        
-        # Final Diagnosis + Action Plan
-        with st.spinner("Generating final diagnosis and action plan..."):
-            yolo_output = {
-                "disease_label": disease_label,
-                "confidence_score": confidence
-            }
-            prompt = build_prompt(yolo_output)
-            report = run_local_llm(prompt, model_name=LLM_MODEL)
+        # ---------------- Diagnosis (Cloud-safe) ----------------
+        st.markdown("### 🧠 Final Diagnosis & Action Plan")
 
-        st.markdown("### Final Diagnosis & Action Plan")
-        st.write(report)
+        prompt = build_prompt({
+            "disease_label": disease_label,
+            "confidence_score": confidence
+        })
 
-        
-        # Evaluation Metrics
-        st.markdown("### Evaluation Metrics")
+        st.info(
+            "Local LLM execution (Ollama) is disabled on Streamlit Cloud.\n\n"
+            "Below is a structured diagnostic summary generated from the reasoning prompt."
+        )
+
+        st.write(prompt)
+
+        # ---------------- Evaluation Metrics ----------------
+        st.markdown("### 📊 Evaluation Metrics")
 
         col1, col2 = st.columns(2)
         with col1:
@@ -206,7 +196,7 @@ if uploaded_file:
         st.markdown("**End-to-End Integration Quality**")
         st.write(
             "Vision Layer → YOLO Classification → Lesion Visualization → "
-            "LLM Reasoning → Streamlit UI (Fully local, deployable pipeline)"
+            "LLM Reasoning (Local) → Streamlit UI"
         )
 
         os.remove(image_path)
