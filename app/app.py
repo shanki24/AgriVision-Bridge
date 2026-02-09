@@ -11,6 +11,7 @@ import streamlit as st
 from PIL import Image
 import tempfile
 import numpy as np
+os.environ["OPENCV_VIDEOIO_PRIORITY_MSMF"] = "0"
 import cv2
 
 # Vision layer
