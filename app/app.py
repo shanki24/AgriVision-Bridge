@@ -19,20 +19,20 @@ from ultralytics import YOLO
 # Reasoning prompt (SAFE to import)
 from src.reasoning.prompt_builder import build_prompt
 
-# --------------------------------------------------
+
 # CONFIG (GitHub-safe paths)
-# --------------------------------------------------
+
 MODEL_PATH = "runs/classify/train/weights/best.pt"
 LLM_MODEL = "llama3"
 
 # Load model
 model = YOLO(MODEL_PATH)
 
-# --------------------------------------------------
+
 # OVERLAY LOGIC
 # Healthy  -> single GREEN box
 # Disease  -> multiple RED boxes
-# --------------------------------------------------
+
 def overlay_boxes(image_pil, label, confidence):
     image = np.array(image_pil)
     output = image.copy()
@@ -106,9 +106,9 @@ def overlay_boxes(image_pil, label, confidence):
 
     return output
 
-# --------------------------------------------------
+
 # STREAMLIT UI
-# --------------------------------------------------
+
 st.set_page_config(page_title="AgriVision-Bridge", layout="centered")
 
 st.title("AgriVision-Bridge")
@@ -171,7 +171,7 @@ if uploaded_file:
 
         st.write(prompt)
 
-        # ---------------- Evaluation Metrics ----------------
+        # Evaluation Metrics
         st.markdown("### Evaluation Metrics")
 
         col1, col2 = st.columns(2)
