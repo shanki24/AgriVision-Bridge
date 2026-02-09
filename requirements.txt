@@ -1,11 +1,7 @@
+streamlit
 ultralytics>=8.0.0
 torch
 torchvision
-torchaudio
 numpy
-Pillow
-tqdm
-streamlit
-numpy
-matplotlib
+pillow
 opencv-python-headless
